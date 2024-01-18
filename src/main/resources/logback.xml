@@ -1,0 +1,17 @@
+<configuration>
+    <conversionRule conversionWord="lcolor"
+                    converterClass="com.simonegiusso.config.log.LevelColor"/>
+    <conversionRule conversionWord="truncatedthreadname"
+                    converterClass="com.simonegiusso.config.log.TruncateWithEllipses"/>
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>
+                %d{HH:mm:ss.SSS} %-26([%truncatedthreadname)] %lcolor(%-5level) %cyan(%25.35(%logger{15})) %msg %n
+            </pattern>
+        </encoder>
+    </appender>
+    <root level="INFO">
+        <appender-ref ref="STDOUT"/>
+    </root>
+</configuration>
