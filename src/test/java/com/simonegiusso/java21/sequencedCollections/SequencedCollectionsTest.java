@@ -7,6 +7,8 @@ import org.junit.jupiter.api.Test;
 
 import java.util.*;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 @Slf4j
 public class SequencedCollectionsTest {
 
@@ -33,7 +35,7 @@ public class SequencedCollectionsTest {
         sequencedCollection.addLast("<3");
 
         // The reversed operator returns a view. Modification to the original sequence are reflected to this view
-        Assertions.assertEquals("<3", reversedSequencedCollection.getFirst());
+        assertEquals("<3", reversedSequencedCollection.getFirst());
 
         reversedSequencedCollection.addFirst("!");
 
