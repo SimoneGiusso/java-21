@@ -18,19 +18,19 @@ import static java.util.concurrent.Executors.newSingleThreadExecutor;
 
 @Slf4j
 @Testcontainers
-public class BeforeVirtualThreadsTest {
+class BeforeVirtualThreadsTest {
 
     @Container
     public PostgreSQLContainer<?> postgresql = new PostgreSQLContainer<>(DockerImageName.parse("postgres:16.1"));
 
     @Test
-    public void testSynchronousProgramming() throws SQLException {
+    void testSynchronousProgramming() throws SQLException {
         performSlowQuery(postgresql);
         aQuickTask();
     }
 
     @Test
-    public void testAsynchronousProgramming() {
+    void testAsynchronousProgramming() {
         try (ExecutorService singleThreadExecutor = newSingleThreadExecutor()) {
             singleThreadExecutor.submit(() -> performSlowQuery(postgresql));
             singleThreadExecutor.submit(() -> performSlowQuery(postgresql));
@@ -39,7 +39,7 @@ public class BeforeVirtualThreadsTest {
     }
 
     @Test
-    public void testReactiveProgramming() {
+    void testReactiveProgramming() {
         performReactiveSlowQuery(PostgreSQLR2DBCDatabaseContainer.getOptions(postgresql))
             .zipWith(performReactiveSlowQuery(PostgreSQLR2DBCDatabaseContainer.getOptions(postgresql)))
             .zipWith(Mono.fromCallable(TestHelper::aQuickTask))
