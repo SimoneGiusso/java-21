@@ -47,7 +47,7 @@ class VirtualThreadPerformanceTest {
                 if (i % 2000 == 0) {
                     log.info("Doing some work...");
                 }
-                blockingOperationFor5s();
+                blockingOperationFor500ms();
                 if (i % 2000 == 0) {
                     log.info("I finished!");
                 }
@@ -67,7 +67,7 @@ class VirtualThreadPerformanceTest {
                 if (i % 2000 == 0) {
                     log.info(Thread.currentThread().toString());
                 }
-                blockingOperationFor5s();
+                blockingOperationFor500ms();
             }));
         }  // executor.close() is called implicitly, and waits
     }
@@ -84,10 +84,10 @@ class VirtualThreadPerformanceTest {
     @Test
     void platformThreadsCodeExecutionPerformance() {
         try (var executor = newFixedThreadPool(getRuntime().availableProcessors())) {
-            IntStream.range(0, 10_000_000)
+            IntStream.range(0, 3_000_000)
                 .forEach(i -> executor.submit(() -> {
                     if (i % 1_000_000 == 0) {
-                        log.info("Result computed: {}", computeFibonacci(10));
+                        log.info("Result computed: {}", computeFibonacci(50));
                     }
                 }));
         }
@@ -100,10 +100,10 @@ class VirtualThreadPerformanceTest {
     @Test
     void virtualThreadsCodeExecutionPerformance() {
         try (var executor = newVirtualThreadPerTaskExecutor()) {
-            IntStream.range(0, 10_000_000)
+            IntStream.range(0, 3_000_000)
                 .forEach(i -> executor.submit(() -> {
                     if (i % 1_000_000 == 0) {
-                        log.info("Result computed: {}", computeFibonacci(10));
+                        log.info("Result computed: {}", computeFibonacci(50));
                     }
                 }));
         }
@@ -111,12 +111,21 @@ class VirtualThreadPerformanceTest {
 
     static int blockingOperationFor5s() {
         try {
-            sleep(Duration.ofMillis(10000));
+            sleep(Duration.ofMillis(5000));
             return ThreadLocalRandom.current().nextInt();
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
     } // E.g. I/O
+
+    static int blockingOperationFor500ms() {
+        try {
+            sleep(Duration.ofMillis(500));
+            return ThreadLocalRandom.current().nextInt();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     static int blockingOperation(int ms) {
         try {
