@@ -1,6 +1,5 @@
 package com.simonegiusso.java21.virtualthreads;
 
-import com.simonegiusso.TestHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.testcontainers.containers.PostgreSQLContainer;
@@ -8,7 +7,6 @@ import org.testcontainers.containers.PostgreSQLR2DBCDatabaseContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
-import reactor.core.publisher.Mono;
 
 import java.sql.SQLException;
 import java.util.concurrent.ExecutorService;
@@ -26,7 +24,6 @@ class BeforeVirtualThreadsTest {
     @Test
     void testSynchronousProgramming() throws SQLException {
         performSlowQuery(postgresql);
-        aQuickTask();
     }
 
     @Test
@@ -34,7 +31,6 @@ class BeforeVirtualThreadsTest {
         try (ExecutorService singleThreadExecutor = newSingleThreadExecutor()) {
             singleThreadExecutor.submit(() -> performSlowQuery(postgresql));
             singleThreadExecutor.submit(() -> performSlowQuery(postgresql));
-            aQuickTask();
         }
     }
 
@@ -42,7 +38,6 @@ class BeforeVirtualThreadsTest {
     void testReactiveProgramming() {
         performReactiveSlowQuery(PostgreSQLR2DBCDatabaseContainer.getOptions(postgresql))
             .zipWith(performReactiveSlowQuery(PostgreSQLR2DBCDatabaseContainer.getOptions(postgresql)))
-            .zipWith(Mono.fromCallable(TestHelper::aQuickTask))
             .subscribe();
 
         sleepForMs(15000); // Give Time To complete queries

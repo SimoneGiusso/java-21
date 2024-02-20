@@ -70,12 +70,6 @@ public class TestHelper {
         return format("SELECT pg_sleep(%s), 1 AS data;", sleepFor);
     }
 
-    public static int aQuickTask() {
-        sleepForMs(200);
-        log.info("Quick task completed!");
-        return 1;
-    }
-
     public static void sleepForMs(int ms) {
         try {
             sleep(ms);
